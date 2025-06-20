@@ -1,0 +1,17 @@
+workflows:
+  ios-release-no-shorebird:
+    name: iOS Release (No Shorebird)
+    environment:
+      flutter: stable
+      xcode: latest
+    scripts:
+      # Install dependencies
+      - flutter pub get
+      # Build for iOS (real device, release)
+      - flutter build ios --release --no-codesign
+      # Prepare the IPA for distribution
+      - mkdir -p build/ios/ipa
+      - cp -r build/ios/iphoneos/Runner.app build/ios/ipa/
+      - cd build/ios/ipa && zip -r Runner.ipa Runner.app
+    artifacts:
+      - build/ios/ipa/Runner.ipa
