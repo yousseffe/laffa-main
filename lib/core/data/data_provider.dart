@@ -20,12 +20,18 @@ class DataProvider extends ChangeNotifier {
   bool _isLoadingCategories = false;
   bool _isLoadingSubCategories = false;
   bool _isLoadingPosters = false;
+  bool _isLoadingMode = false;
 
   // Error states
   String? _productsError;
   String? _categoriesError;
   String? _subCategoriesError;
   String? _postersError;
+  String? _modeError;
+
+  // Mode state
+  Mode? _mode;
+  Mode? get mode => _mode;
 
   List<Category> _allCategories = [];
   List<Category> _filteredCategories = [];
@@ -49,12 +55,14 @@ class DataProvider extends ChangeNotifier {
   bool get isLoadingCategories => _isLoadingCategories;
   bool get isLoadingSubCategories => _isLoadingSubCategories;
   bool get isLoadingPosters => _isLoadingPosters;
+  bool get isLoadingMode => _isLoadingMode;
 
   // Getters for error states
   String? get productsError => _productsError;
   String? get categoriesError => _categoriesError;
   String? get subCategoriesError => _subCategoriesError;
   String? get postersError => _postersError;
+  String? get modeError => _modeError;
 
   DataProvider() {
     _initializeData();
@@ -66,7 +74,36 @@ class DataProvider extends ChangeNotifier {
       getAllCategories(),
       getAllSubCategories(),
       getAllPosters(),
+      getMode(),
     ]);
+  }
+
+  Future<Mode?> getMode({bool showSnack = false}) async {
+    try {
+      _isLoadingMode = true;
+      _modeError = null;
+      notifyListeners();
+
+      Response response = await service.getItems(endpointUrl: 'mode');
+      if (response.isOk) {
+        ApiResponse<Mode> apiResponse = ApiResponse<Mode>.fromJson(
+          response.body,
+          (json) => Mode.fromJson(json as Map<String, dynamic>),
+        );
+        _mode = apiResponse.data;
+        if(showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+      } else {
+        _modeError = 'Failed to load mode';
+        if(showSnack) SnackBarHelper.showErrorSnackBar(_modeError!);
+      }
+    } catch (e) {
+      _modeError = e.toString();
+      if(showSnack) SnackBarHelper.showErrorSnackBar(_modeError!);
+    } finally {
+      _isLoadingMode = false;
+      notifyListeners();
+    }
+    return _mode;
   }
 
   Future<List<Category>> getAllCategories({bool showSnack = false}) async {
@@ -160,6 +197,14 @@ class DataProvider extends ChangeNotifier {
           (json) => (json as List).map((e) => Product.fromJson(e)).toList(),
         );
         _allProducts = apiResponse.data ?? [];
+        _allProducts.sort((a, b) {
+          final aDate = a.createdAt != null ? DateTime.tryParse(a.createdAt!) : null;
+          final bDate = b.createdAt != null ? DateTime.tryParse(b.createdAt!) : null;
+          if (aDate == null && bDate == null) return 0;
+          if (aDate == null) return 1; // nulls last
+          if (bDate == null) return -1;
+          return bDate.compareTo(aDate); // descending order (newest first)
+        });
         _filteredProducts = List.from(_allProducts);
         if(showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
       } else {

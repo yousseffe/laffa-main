@@ -28,6 +28,17 @@
   "highToLow": "High To Low",
   "sortByPrice": "Sort By Price",
   "confirm_order": "Confirm Order",
+  "order_via_whatsapp": "Order via WhatsApp",
+  "place_order_form": "Place Order",
   "about" : "about",
-  "search": "Search"
+  "search": "Search",
+  "placeOrder": "Place Order",
+  "address": "Address",
+  "notes": "Notes (Optional)",
+  "submitOrder": "Submit Order",
+  "cancel": "Cancel",
+  "orderSubmitted": "Order submitted successfully!",
+  "nameRequired": "Name is required",
+  "phoneRequired": "Phone number is required",
+  "addressRequired": "Address is required"
 }

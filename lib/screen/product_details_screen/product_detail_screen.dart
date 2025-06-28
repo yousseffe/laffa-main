@@ -1,9 +1,13 @@
 import 'package:ecommerce_laffa/l10n/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart'; // Import url_launcher package
+import 'package:provider/provider.dart';
 import '../../../../widget/carousel_slider.dart';
 import '../../../../widget/page_wrapper.dart';
+import '../../../../widget/order_form_dialog.dart';
+import '../../core/data/data_provider.dart';
 import '../../models/product.dart';
+import '../../utility/app_color.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final Product product;
@@ -57,6 +61,53 @@ class ProductDetailScreen extends StatelessWidget {
         SnackBar(content: Text("Cannot open WhatsApp")),
       );
     }
+  }
+
+  void _handleOrder(BuildContext context) {
+    final dataProvider = context.read<DataProvider>();
+    final mode = dataProvider.mode;
+    
+    if (mode?.isActive == true) {
+      // Mode is active, open WhatsApp
+      _openWhatsApp(context);
+    } else {
+      // Mode is inactive, show order form
+      _showOrderForm(context);
+    }
+  }
+
+  void _showOrderForm(BuildContext context) {
+    Locale currentLocale = Localizations.localeOf(context);
+    String productName;
+    int price = (product.price ?? 0).ceil();
+    int offerPrice = (product.offerPrice ?? 0).ceil();
+    String currencySymbol = "F";
+    String? productImageUrl = product.images?.isNotEmpty == true ? product.images!.first.url : null;
+    
+    switch (currentLocale.languageCode) {
+      case 'ar':
+        productName = product.nameAr ?? product.nameEn ?? '';
+        price = (price / 5).ceil();
+        offerPrice = (offerPrice / 5).ceil();
+        currencySymbol = "ريال";
+        break;
+      case 'fr':
+        productName = product.nameFr ?? product.nameEn ?? '';
+        break;
+      default:
+        productName = product.nameEn ?? '';
+    }
+
+    String finalPrice = offerPrice > 0 ? "$offerPrice $currencySymbol" : "$price $currencySymbol";
+
+    showDialog(
+      context: context,
+      builder: (context) => OrderFormDialog(
+        productName: productName,
+        productPrice: finalPrice,
+        productImageUrl: productImageUrl,
+      ),
+    );
   }
 
   @override
@@ -185,22 +236,43 @@ class ProductDetailScreen extends StatelessWidget {
                       // WhatsApp Order Button
                       SizedBox(
                         width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () => _openWhatsApp(context),
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/images/whatsapp_logo.png',
-                                height: 24,
-                                width: 24,
-                                color: Colors.white,
+                        child: Consumer<DataProvider>(
+                          builder: (context, dataProvider, child) {
+                            final mode = dataProvider.mode;
+                            final isActive = mode?.isActive ?? false;
+                            
+                            return ElevatedButton(
+                              onPressed: () => _handleOrder(context),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: isActive ? Colors.green : AppColor.darkOrange,
                               ),
-                              const SizedBox(width: 8),
-                              Text(localizations.translate('confirm_order'), style: const TextStyle(color: Colors.white)),
-                            ],
-                          ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (isActive)
+                                    Image.asset(
+                                      'assets/images/whatsapp_logo.png',
+                                      height: 24,
+                                      width: 24,
+                                      color: Colors.white,
+                                    )
+                                  else
+                                    const Icon(
+                                      Icons.shopping_cart,
+                                      color: Colors.white,
+                                      size: 24,
+                                    ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    localizations.translate(
+                                      isActive ? 'order_via_whatsapp' : 'place_order_form'
+                                    ), 
+                                    style: const TextStyle(color: Colors.white)
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],

@@ -15,3 +15,27 @@ class ApiResponse<T> {
         data: json['data'] != null ? fromJsonT!(json['data']) : null,
       );
 }
+
+class Mode {
+  final bool isActive;
+  final String description;
+
+  Mode({
+    required this.isActive,
+    required this.description,
+  });
+
+  factory Mode.fromJson(Map<String, dynamic> json) {
+    return Mode(
+      isActive: json['isActive'] ?? false,
+      description: json['description'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'isActive': isActive,
+      'description': description,
+    };
+  }
+}

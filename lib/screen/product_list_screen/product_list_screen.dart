@@ -15,8 +15,6 @@ class ProductListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var localizations = AppLocalizations.of(context);
-    final GetStorage storage = GetStorage();
-    String name = storage.read('name') ?? 'User';
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -34,7 +32,7 @@ class ProductListScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${localizations.translate('welcomeUser')}, $name',
+                    localizations.translate('welcomeUser'),
                     style: Theme.of(context).textTheme.displayMedium,
                     textDirection: TextDirection.rtl,
                   ),

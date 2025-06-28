@@ -28,6 +28,8 @@
   "highToLow": "من الأعلى إلى الأقل",
   "sortByPrice": "ترتيب السعر",
   "confirm_order": "تأكيد الطلب",
+  "order_via_whatsapp": "الطلب عبر واتساب",
+  "place_order_form": "تقديم طلب",
   "about": "حول",
   "search": "بحث",
   "available": "متوفر",
@@ -36,5 +38,14 @@
   "order_week": "طلبية أسبوع",
   "order_10_days": "طلبية 10 أيام",
   "order_2_weeks": "طلبية أسبوعين",
-  "less_than_3_pieces": "متبقي أقل من 3 قطع"
+  "less_than_3_pieces": "متبقي أقل من 3 قطع",
+  "placeOrder": "تقديم طلب",
+  "address": "العنوان",
+  "notes": "ملاحظات (اختياري)",
+  "submitOrder": "إرسال الطلب",
+  "cancel": "إلغاء",
+  "orderSubmitted": "تم إرسال الطلب بنجاح!",
+  "nameRequired": "الاسم مطلوب",
+  "phoneRequired": "رقم الهاتف مطلوب",
+  "addressRequired": "العنوان مطلوب"
 }

@@ -104,12 +104,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (!mounted) return;
 
-    final bool hasUserInfo = storage.read('name') != null &&
-        storage.read('phone') != null &&
-        storage.read('language') != null;
+    final bool hasLanguage = storage.read('language') != null;
 
     Get.off(
-      () => hasUserInfo ? HomeScreen() : const LanguageSelectionScreen(),
+      () => hasLanguage ? HomeScreen() : const LanguageSelectionScreen(),
       transition: Transition.fadeIn,
       duration: const Duration(milliseconds: 500),
     );
@@ -185,10 +183,9 @@ class LanguageSelectionScreen extends StatelessWidget {
                 () async {
                   final storage = GetStorage();
                   localeProvider.setLocale(Locale('ar'));
-                  storage.write('language',
-                      'ar'); // Save language code instead of full text
+                  storage.write('language', 'ar');
                   storage.write('isSetupComplete', true);
-                  Get.off(() => UserInfoScreen(language: 'العربيه'));
+                  Get.off(() => HomeScreen());
                 },
               ),
               const SizedBox(height: 20),
@@ -214,9 +211,9 @@ class LanguageSelectionScreen extends StatelessWidget {
                 () async {
                   final storage = GetStorage();
                    localeProvider.setLocale(const Locale('fr'));
-                  storage.write('language', 'Français');
+                  storage.write('language', 'fr');
                   storage.write('isSetupComplete', true);
-                  Get.off(() => UserInfoScreen(language: 'Français'));
+                  Get.off(() => HomeScreen());
                 },
               ),
             ],
@@ -248,136 +245,6 @@ class LanguageSelectionScreen extends StatelessWidget {
           fontSize: 18,
           color: textColor,
           fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
-
-class UserInfoScreen extends StatelessWidget {
-  final String language;
-  final GetStorage storage = GetStorage();
-
-  UserInfoScreen({super.key, required this.language});
-
-  @override
-  Widget build(BuildContext context) {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController phoneController = TextEditingController();
-    String title = 'Personal Information';
-    String nameLabel;
-    String phoneLabel;
-    String submitLabel;
-    TextAlign textAlign = TextAlign.left;
-    TextDirection textDirection = TextDirection.ltr;
-
-    switch (language) {
-      case 'العربيه':
-        title = 'المعلومات الشخصية';
-        nameLabel = 'اسم';
-        phoneLabel = 'هاتف';
-        submitLabel = 'إرسال';
-        textAlign = TextAlign.right;
-        textDirection = TextDirection.rtl;
-        break;
-      case 'Français':
-        title = 'Informations personnelles';
-        nameLabel = 'Nom';
-        phoneLabel = 'Téléphone';
-        submitLabel = 'Soumettre';
-        break;
-      default:
-        title = 'Personal Information';
-        nameLabel = 'Name';
-        phoneLabel = 'Phone';
-        submitLabel = 'Submit';
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          title,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextField(
-                controller: nameController,
-                textAlign: textAlign,
-                decoration: InputDecoration(
-                  labelText: nameLabel,
-                  labelStyle: const TextStyle(color: AppColor.darkOrange),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide:
-                        const BorderSide(color: AppColor.darkOrange, width: 2),
-                  ),
-                ),
-                textDirection: textDirection,
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: phoneController,
-                textAlign: textAlign,
-                decoration: InputDecoration(
-                  labelText: phoneLabel,
-                  labelStyle: const TextStyle(color: AppColor.darkOrange),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide:
-                        const BorderSide(color: AppColor.darkOrange, width: 2),
-                  ),
-                ),
-                textDirection: textDirection,
-                keyboardType: TextInputType.phone,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  storage.write('name', nameController.text);
-                  storage.write('phone', phoneController.text);
-                  storage.write('language', language);
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColor.darkOrange,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text(
-                  submitLabel,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

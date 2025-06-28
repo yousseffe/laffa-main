@@ -28,6 +28,8 @@
   "highToLow": "Du plus cher au moins cher",
   "sortByPrice": "Trier par prix",
   "confirm_order": "Confirmer la commande",
+  "order_via_whatsapp": "Commander via WhatsApp",
+  "place_order_form": "Passer la commande",
   "about": "À propos",
   "search": "Recherche",
   "available": "Disponible",
@@ -36,5 +38,14 @@
   "order_week": "Commande semaine",
   "order_10_days": "Commande 10 jours",
   "order_2_weeks": "Commande 2 semaines",
-  "less_than_3_pieces": "Moins de 3 pièces"
+  "less_than_3_pieces": "Moins de 3 pièces",
+  "placeOrder": "Passer la commande",
+  "address": "Adresse",
+  "notes": "Notes (Optionnel)",
+  "submitOrder": "Soumettre la commande",
+  "cancel": "Annuler",
+  "orderSubmitted": "Commande soumise avec succès!",
+  "nameRequired": "Le nom est requis",
+  "phoneRequired": "Le numéro de téléphone est requis",
+  "addressRequired": "L'adresse est requise"
 }
