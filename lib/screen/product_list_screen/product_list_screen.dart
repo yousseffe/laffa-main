@@ -47,10 +47,10 @@ class ProductListScreen extends StatelessWidget {
                         return Center(
                           child: Column(
                             children: [
-                              Text(dataProvider.postersError!),
+                              // Text(dataProvider.postersError!),
                               ElevatedButton(
                                 onPressed: () => dataProvider.getAllPosters(showSnack: true),
-                                child: const Text('Retry'),
+                                child: Text(localizations.translate("retryPosters")),
                               ),
                             ],
                           ),
@@ -71,10 +71,10 @@ class ProductListScreen extends StatelessWidget {
                         return Center(
                           child: Column(
                             children: [
-                              Text(dataProvider.categoriesError!),
+                              // Text(dataProvider.categoriesError!),
                               ElevatedButton(
                                 onPressed: () => dataProvider.getAllCategories(showSnack: true),
-                                child: const Text('Retry'),
+                                child: Text(localizations.translate("retryCategories")),
                               ),
                             ],
                           ),
@@ -91,10 +91,10 @@ class ProductListScreen extends StatelessWidget {
                         return Center(
                           child: Column(
                             children: [
-                              Text(dataProvider.productsError!),
+                              // Text(dataProvider.productsError!),
                               ElevatedButton(
                                 onPressed: () => dataProvider.getAllProduct(showSnack: true),
-                                child: const Text('Retry'),
+                                child: Text(localizations.translate("retryProducts")),
                               ),
                             ],
                           ),
