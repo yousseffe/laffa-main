@@ -10,11 +10,11 @@
   "name": "Nom",
   "phoneNumber": "Numéro de Téléphone",
   "saveChanges": "Enregistrer les Modifications",
-    "Home": "Accueil",
-    "categories": "Catégories",
-    "cart": "Panier",
-    "Favorite": "Favoris",
-    "Profile": "Profil",
+  "Home": "Accueil",
+  "categories": "Catégories",
+  "cart": "Panier",
+  "Favorite": "Favoris",
+  "Profile": "Profil",
   "appName": "Lafaa",
   "personalInfo": "Informations Personnelles",
   "phone": "Téléphone",
@@ -47,5 +47,9 @@
   "orderSubmitted": "Commande soumise avec succès!",
   "nameRequired": "Le nom est requis",
   "phoneRequired": "Le numéro de téléphone est requis",
-  "addressRequired": "L'adresse est requise"
+  "addressRequired": "L'adresse est requise",
+  "noProductsFound": "Aucun produit trouvé",
+  "retryProducts": "Appuyez pour afficher les produits",
+  "retryCategories": "Appuyez pour afficher les catégories",
+  "retryPosters": "Appuyez pour afficher les affiches"
 }

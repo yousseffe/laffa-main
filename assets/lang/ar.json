@@ -47,5 +47,9 @@
   "orderSubmitted": "تم إرسال الطلب بنجاح!",
   "nameRequired": "الاسم مطلوب",
   "phoneRequired": "رقم الهاتف مطلوب",
-  "addressRequired": "العنوان مطلوب"
+  "addressRequired": "العنوان مطلوب",
+  "noProductsFound": "لم يتم العثور على منتجات",
+  "retryProducts": "اضغط لإظهار المنتجات",
+  "retryCategories": "اضغط لإظهار الفئات",
+  "retryPosters": "اضغط لإظهار الملصقات"
 }
