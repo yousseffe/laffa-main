@@ -15,7 +15,7 @@ class ProductDetailScreen extends StatelessWidget {
   const ProductDetailScreen(this.product, {super.key});
 
   void _openWhatsApp(BuildContext context) async {
-    const String ownerPhoneNumber = "23562428867";
+    const String ownerPhoneNumber = "23567893923";
     //  const String ownerPhoneNumber = "201140700849";
 
     Locale currentLocale = Localizations.localeOf(context);
