@@ -3,11 +3,12 @@ import 'package:ecommerce_laffa/l10n/locale_provider.dart';
 import 'product_favorite_screen/favorite_screen.dart';
 import 'product_list_screen/product_list_screen.dart';
 import 'profile_screen/profile_screen.dart';
+import 'cart_screen/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import '../../../utility/app_data.dart';
-import '../../../widget/page_wrapper.dart';
+import 'package:ecommerce_laffa/utility/app_data.dart';
+import 'package:ecommerce_laffa/widget/page_wrapper.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +16,7 @@ class HomeScreen extends StatefulWidget {
   static const List<Widget> screens = [
     ProductListScreen(),
     FavoriteScreen(),
+    CartScreen(),
     ProfileScreen()
   ];
 

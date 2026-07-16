@@ -43,20 +43,24 @@ class AppData {
   ];
   static List<BottomNavyBarItem> bottomNavyBarItems = [
     const BottomNavyBarItem(
-      "Home",
+      "الرئيسية",
       Icon(Icons.home),
-      Color(0xFFFF69B4),
+      Color(0xFF1A4F36),
     ),
     const BottomNavyBarItem(
-      "Favorite",
+      "المفضلة",
       Icon(Icons.favorite),
-      Color(0xFFFF69B4),
+      Color(0xFF1A4F36),
     ),
-    
     const BottomNavyBarItem(
-      "Profile",
+      "السلة",
+      Icon(Icons.shopping_cart),
+      Color(0xFF1A4F36),
+    ),
+    const BottomNavyBarItem(
+      "حسابي",
       Icon(Icons.person),
-      Color(0xFFFF69B4),
+      Color(0xFF1A4F36),
     ),
   ];
 

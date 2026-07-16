@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ecommerce_laffa/l10n/locale_provider.dart';
+import '../core/data/region_provider.dart';
 import '../models/product.dart';
 import '../screen/product_favorite_screen/provider/favorite_provider.dart';
 import '../utility/extensions.dart';
@@ -21,26 +22,14 @@ class ProductGridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Locale currentLocale = Localizations.localeOf(context);
     var localization = AppLocalizations.of(context);
-    String productName;
-    int price = (product.price ?? 0).ceil();
-    int offerPrice = (product.offerPrice ?? 0).ceil();
-    String currencySymbol = "F";
-
-    switch (currentLocale.languageCode) {
-      case 'ar':
-        productName = product.nameAr ?? product.nameEn ?? '';
-        price = (price / 5).ceil();
-        offerPrice = (offerPrice / 5).ceil();
-        currencySymbol = "ريال";
-        break;
-      case 'fr':
-        productName = product.nameFr ?? product.nameEn ?? '';
-        break;
-      default:
-        productName = product.nameEn ?? '';
-    }
+    final double deliveryFee = context.watch<RegionProvider>().deliveryFee;
+    String productName = product.nameAr ?? product.nameEn ?? '';
+    int price = (product.price ?? 0).ceil() + deliveryFee.ceil();
+    int offerPrice = product.offerPrice != null && product.offerPrice! > 0
+        ? product.offerPrice!.ceil() + deliveryFee.ceil()
+        : 0;
+    const String currencySymbol = "دينار";
 
     double discountPercentage = context.dataProvider.calculateDiscountPercentage(
       product.price ?? 0,
@@ -51,7 +40,7 @@ class ProductGridTile extends StatelessWidget {
         product.offerPrice != 0 &&
         (product.offerPrice ?? 0) < (product.price ?? 0));
 
-    String discountLabel = currentLocale.languageCode == 'ar' ? 'خصم' : 'OFF';
+    const String discountLabel = 'خصم';
 
     return Container(
       height: 320,
@@ -158,8 +147,8 @@ class ProductGridTile extends StatelessWidget {
                   children: [
                     Text(
                       offerPrice != 0
-                          ? "$currencySymbol ${NumberFormat('#,###').format(offerPrice)}"
-                          : "$currencySymbol ${NumberFormat('#,###').format(price)}",
+                          ? "${NumberFormat('#,###').format(offerPrice)} $currencySymbol"
+                          : "${NumberFormat('#,###').format(price)} $currencySymbol",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -169,7 +158,7 @@ class ProductGridTile extends StatelessWidget {
                     const SizedBox(width: 8),
                     if (offerPrice != 0 && offerPrice != price)
                       Text(
-                        "$currencySymbol ${NumberFormat('#,###').format(price)}",
+                        "${NumberFormat('#,###').format(price)} $currencySymbol",
                         style: const TextStyle(
                           decoration: TextDecoration.lineThrough,
                           fontSize: 14,

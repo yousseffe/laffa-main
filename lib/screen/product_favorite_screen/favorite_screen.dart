@@ -4,7 +4,7 @@ import 'package:ecommerce_laffa/utility/extensions.dart';
 import 'provider/favorite_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../widget/product_grid_view.dart';
+import 'package:ecommerce_laffa/widget/product_grid_view.dart';
 import '../../utility/app_color.dart';
 
 

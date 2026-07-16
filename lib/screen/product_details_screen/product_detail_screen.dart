@@ -2,10 +2,11 @@ import 'package:ecommerce_laffa/l10n/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart'; // Import url_launcher package
 import 'package:provider/provider.dart';
-import '../../../../widget/carousel_slider.dart';
-import '../../../../widget/page_wrapper.dart';
-import '../../../../widget/order_form_dialog.dart';
+import 'package:ecommerce_laffa/widget/carousel_slider.dart';
+import 'package:ecommerce_laffa/widget/page_wrapper.dart';
 import '../../core/data/data_provider.dart';
+import '../../core/data/cart_provider.dart';
+import '../../core/data/region_provider.dart';
 import '../../models/product.dart';
 import '../../utility/app_color.dart';
 
@@ -14,98 +15,12 @@ class ProductDetailScreen extends StatelessWidget {
 
   const ProductDetailScreen(this.product, {super.key});
 
-  void _openWhatsApp(BuildContext context) async {
-    const String ownerPhoneNumber = "23567893923";
-    //  const String ownerPhoneNumber = "201140700849";
-
-    Locale currentLocale = Localizations.localeOf(context);
-    var localization = AppLocalizations.of(context);
-    String productName;
-    int price = (product.price ?? 0).ceil();
-    int offerPrice = (product.offerPrice ?? 0).ceil();
-    String currencySymbol = "\F";
-    String? productImageUrl = product.images?.isNotEmpty == true ? product.images!.first.url : null;
-    switch (currentLocale.languageCode) {
-      case 'ar':
-        productName = product.nameAr ?? product.nameEn ?? '';
-        price = (price / 5).ceil();
-        offerPrice = (offerPrice / 5).ceil();
-        currencySymbol = "ريال";
-        break;
-      case 'fr':
-        productName = product.nameFr ?? product.nameEn ?? '';
-        break;
-      default:
-        productName = product.nameEn ?? '';
-    }
-
-    String finalPrice = offerPrice > 0 ? "$offerPrice $currencySymbol" : "$price $currencySymbol";
-
-    String message = currentLocale.languageCode == 'ar'
-        ? "مرحبًا، أود شراء هذا المنتج:\n\n*$productName*\nالسعر: $finalPrice"
-        : currentLocale.languageCode == 'fr'
-        ? "Bonjour, je voudrais acheter ce produit:\n\n*$productName*\nPrix: $finalPrice"
-        : "Hello, I would like to buy this product:\n\n*$productName*\nPrice: $finalPrice";
-    if (productImageUrl != null) {
-      message += "\n\n$productImageUrl";
-    }
-    String encodedMessage = Uri.encodeComponent(message);
-    String url = "https://wa.me/$ownerPhoneNumber?text=$encodedMessage";
-    print("whatsup");
-    print(url);
-    print("break point");
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Cannot open WhatsApp")),
-      );
-    }
-  }
-
-  void _handleOrder(BuildContext context) {
-    final dataProvider = context.read<DataProvider>();
-    final mode = dataProvider.mode;
-    
-    if (mode?.isActive == true) {
-      // Mode is active, open WhatsApp
-      _openWhatsApp(context);
-    } else {
-      // Mode is inactive, show order form
-      _showOrderForm(context);
-    }
-  }
-
-  void _showOrderForm(BuildContext context) {
-    Locale currentLocale = Localizations.localeOf(context);
-    String productName;
-    int price = (product.price ?? 0).ceil();
-    int offerPrice = (product.offerPrice ?? 0).ceil();
-    String currencySymbol = "F";
-    String? productImageUrl = product.images?.isNotEmpty == true ? product.images!.first.url : null;
-    
-    switch (currentLocale.languageCode) {
-      case 'ar':
-        productName = product.nameAr ?? product.nameEn ?? '';
-        price = (price / 5).ceil();
-        offerPrice = (offerPrice / 5).ceil();
-        currencySymbol = "ريال";
-        break;
-      case 'fr':
-        productName = product.nameFr ?? product.nameEn ?? '';
-        break;
-      default:
-        productName = product.nameEn ?? '';
-    }
-
-    String finalPrice = offerPrice > 0 ? "$offerPrice $currencySymbol" : "$price $currencySymbol";
-
-    showDialog(
-      context: context,
-      builder: (context) => OrderFormDialog(
-        productName: productName,
-        productPrice: finalPrice,
-        productImageUrl: productImageUrl,
+  void _addToCart(BuildContext context) {
+    Provider.of<CartProvider>(context, listen: false).addToCart(product);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("تم إضافة المنتج إلى السلة"),
+        duration: Duration(seconds: 2),
       ),
     );
   }
@@ -113,34 +28,16 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var localizations = AppLocalizations.of(context);
-    Locale currentLocale = Localizations.localeOf(context);
+    final double deliveryFee = context.watch<RegionProvider>().deliveryFee;
 
-    // Determine the product name and description based on the current locale
-    String productName;
-    String productDescription;
-    switch (currentLocale.languageCode) {
-      case 'ar':
-        productName = product.nameAr ?? product.nameEn ?? '';
-        productDescription = product.descriptionAr ?? product.descriptionEn ?? '';
-        break;
-      case 'fr':
-        productName = product.nameFr ?? product.nameEn ?? '';
-        productDescription = product.descriptionFr ?? product.descriptionEn ?? '';
-        break;
-      default:
-        productName = product.nameEn ?? '';
-        productDescription = product.descriptionEn ?? '';
-    }
+    String productName = product.nameAr ?? product.nameEn ?? '';
+    String productDescription = product.descriptionAr ?? product.descriptionEn ?? '';
 
-    int price = (product.price ?? 0).ceil();
-    int offerPrice = (product.offerPrice ?? 0).ceil();
-    String currencySymbol = "F";
-
-    if (currentLocale.languageCode == 'ar') {
-      price = (price / 5).ceil();
-      offerPrice = (offerPrice / 5).ceil();
-      currencySymbol = "ريال";
-    }
+    int price = (product.price ?? 0).ceil() + deliveryFee.ceil();
+    int offerPrice = product.offerPrice != null && product.offerPrice! > 0
+        ? product.offerPrice!.ceil() + deliveryFee.ceil()
+        : 0;
+    const String currencySymbol = "دينار";
 
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
@@ -233,46 +130,30 @@ class ProductDetailScreen extends StatelessWidget {
                       const SizedBox(height: 10),
                       Text(productDescription),
                       const SizedBox(height: 40),
-                      // WhatsApp Order Button
+                      // Add to Cart Button
                       SizedBox(
                         width: double.infinity,
-                        child: Consumer<DataProvider>(
-                          builder: (context, dataProvider, child) {
-                            final mode = dataProvider.mode;
-                            final isActive = mode?.isActive ?? false;
-                            
-                            return ElevatedButton(
-                              onPressed: () => _handleOrder(context),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: isActive ? Colors.green : AppColor.darkOrange,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () => _addToCart(context),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColor.darkOrange,
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add_shopping_cart,
+                                color: Colors.white,
+                                size: 24,
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  if (isActive)
-                                    Image.asset(
-                                      'assets/images/whatsapp_logo.png',
-                                      height: 24,
-                                      width: 24,
-                                      color: Colors.white,
-                                    )
-                                  else
-                                    const Icon(
-                                      Icons.shopping_cart,
-                                      color: Colors.white,
-                                      size: 24,
-                                    ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    localizations.translate(
-                                      isActive ? 'order_via_whatsapp' : 'place_order_form'
-                                    ), 
-                                    style: const TextStyle(color: Colors.white)
-                                  ),
-                                ],
+                              SizedBox(width: 8),
+                              Text(
+                                "أضف إلى السلة", 
+                                style: TextStyle(color: Colors.white, fontSize: 18)
                               ),
-                            );
-                          },
+                            ],
+                          ),
                         ),
                       ),
                     ],

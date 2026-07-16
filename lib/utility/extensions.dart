@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../core/data/data_provider.dart';
+import '../core/data/region_provider.dart';
 import '../screen/product_by_category_screen/provider/product_by_category_provider.dart';
 import '../screen/product_details_screen/provider/product_detail_provider.dart';
 import '../screen/product_favorite_screen/provider/favorite_provider.dart';
 
 extension Providers on BuildContext {
   DataProvider get dataProvider => Provider.of<DataProvider>(this, listen: false);
+  RegionProvider get regionProvider => Provider.of<RegionProvider>(this, listen: false);
   ProductByCategoryProvider get proByCProvider => Provider.of<ProductByCategoryProvider>(this, listen: false);
   ProductDetailProvider get proDetailProvider => Provider.of<ProductDetailProvider>(this, listen: false);
   FavoriteProvider get favoriteProvider => Provider.of<FavoriteProvider>(this, listen: false);

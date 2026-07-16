@@ -9,6 +9,7 @@ import '../../utility/app_color.dart';
 import 'package:provider/provider.dart';
 import '../../l10n/locale_provider.dart';
 import 'package:get_storage/get_storage.dart';
+import '../region_selection_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -59,10 +60,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 40),
               OpenContainerWrapper(
-                nextScreen: const LanguageSelectionPage(),
+                nextScreen: const RegionSelectionScreen(isChangingRegion: true),
                 child: NavigationTile(
-                  icon: Icons.language,
-                  title: localizations.translate('changeLanguage'),
+                  icon: Icons.location_on,
+                  title: 'تغيير المنطقة',
                 ),
               ),
               const SizedBox(height: 20),
@@ -155,57 +156,3 @@ class ManagePersonalInformationPage extends StatelessWidget {
   }
 }
 
-class LanguageSelectionPage extends StatelessWidget {
-  const LanguageSelectionPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    var localizations = AppLocalizations.of(context);
-
-    final localeProvider = Provider.of<LocaleProvider>(context);
-    final GetStorage storage = GetStorage();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(localizations.translate('selectLanguage')),
-      ),
-      body: ListView(
-        children: [
-          // ListTile(
-          //   title: Text(localizations.translate('english')),
-          //   trailing: localeProvider.locale.languageCode == 'en'
-          //       ? const Icon(Icons.check, color: AppColor.darkOrange)
-          //       : null,
-          //   onTap: () {
-          //     localeProvider.setLocale(const Locale('en'));
-          //     storage.write('language', 'English');
-          //     Get.back();
-          //   },
-          // ),
-          ListTile(
-            title: Text(localizations.translate('arabic')),
-            trailing: localeProvider.locale.languageCode == 'ar'
-                ? const Icon(Icons.check, color: AppColor.darkOrange)
-                : null,
-            onTap: () {
-              localeProvider.setLocale(const Locale('ar'));
-              storage.write('language', 'العربيه');
-              Get.back();
-            },
-          ),
-          ListTile(
-            title: Text(localizations.translate('french')),
-            trailing: localeProvider.locale.languageCode == 'fr'
-                ? const Icon(Icons.check, color: AppColor.darkOrange)
-                : null,
-            onTap: () {
-              localeProvider.setLocale(const Locale('fr'));
-              storage.write('language', 'Français');
-              Get.back();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}

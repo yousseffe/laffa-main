@@ -8,6 +8,7 @@ class Product {
   String? descriptionFr;
   double? price;
   double? offerPrice;
+  String? unitType;
   ProRef? proCategoryId;
   ProRef? proSubCategoryId;
   List<Images>? images;
@@ -15,6 +16,15 @@ class Product {
   String? createdAt;
   String? updatedAt;
   int? iV;
+
+  // Base price before delivery, using the offer price when one is set.
+  double get basePrice {
+    final double offer = offerPrice ?? 0;
+    return offer > 0 ? offer : (price ?? 0);
+  }
+
+  // Final price shown to the customer: base price + the selected region's delivery fee.
+  double priceForDeliveryFee(double deliveryFee) => basePrice + deliveryFee;
 
   Product(
       {this.sId,
@@ -26,6 +36,7 @@ class Product {
         this.descriptionFr,
         this.price,
         this.offerPrice,
+        this.unitType,
         this.proCategoryId,
         this.proSubCategoryId,
         this.images,
@@ -44,6 +55,7 @@ class Product {
     descriptionFr = json['descriptionFr'];
     price = json['price']?.toDouble();
     offerPrice = json['offerPrice']?.toDouble();
+    unitType = json['unitType'];
     proCategoryId = json['proCategoryId'] != null
         ? ProRef.fromJson(json['proCategoryId'])
         : null;
@@ -73,6 +85,7 @@ class Product {
     data['descriptionFr'] = descriptionFr;
     data['price'] = price;
     data['offerPrice'] = offerPrice;
+    data['unitType'] = unitType;
     if (proCategoryId != null) {
       data['proCategoryId'] = proCategoryId!.toJson();
     }

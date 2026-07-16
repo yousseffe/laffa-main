@@ -7,6 +7,7 @@ import '../../models/api_response.dart';
 import '../../models/poster.dart';
 import '../../models/product.dart';
 import '../../models/sub_category.dart';
+import '../../models/region.dart';
 // import '../../models/user.dart';
 import '../../services/http_services.dart';
 // import '../../utility/constants.dart';
@@ -50,6 +51,13 @@ class DataProvider extends ChangeNotifier {
   List<Poster> _filteredPosters = [];
   List<Poster> get posters => _filteredPosters;
 
+  bool _isLoadingRegions = false;
+  String? _regionsError;
+  List<Region> _allRegions = [];
+  List<Region> get regions => _allRegions;
+  bool get isLoadingRegions => _isLoadingRegions;
+  String? get regionsError => _regionsError;
+
   // Getters for loading states
   bool get isLoadingProducts => _isLoadingProducts;
   bool get isLoadingCategories => _isLoadingCategories;
@@ -75,7 +83,36 @@ class DataProvider extends ChangeNotifier {
       getAllSubCategories(),
       getAllPosters(),
       getMode(),
+      getAllRegions(),
     ]);
+  }
+
+  Future<List<Region>> getAllRegions({bool showSnack = false}) async {
+    try {
+      _isLoadingRegions = true;
+      _regionsError = null;
+      notifyListeners();
+
+      Response response = await service.getItems(endpointUrl: 'regions');
+      if (response.isOk) {
+        ApiResponse<List<Region>> apiResponse = ApiResponse<List<Region>>.fromJson(
+          response.body,
+          (json) => (json as List).map((e) => Region.fromJson(e)).toList(),
+        );
+        _allRegions = apiResponse.data ?? [];
+        if(showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+      } else {
+        _regionsError = 'Failed to load regions';
+        if(showSnack) SnackBarHelper.showErrorSnackBar(_regionsError!);
+      }
+    } catch (e) {
+      _regionsError = e.toString();
+      if(showSnack) SnackBarHelper.showErrorSnackBar(_regionsError!);
+    } finally {
+      _isLoadingRegions = false;
+      notifyListeners();
+    }
+    return _allRegions;
   }
 
   Future<Mode?> getMode({bool showSnack = false}) async {

@@ -4,7 +4,7 @@ import '../../core/data/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'components/custom_app_bar.dart';
-import '../../../../widget/product_grid_view.dart';
+import 'package:ecommerce_laffa/widget/product_grid_view.dart';
 import 'components/category_selector.dart';
 import 'components/poster_section.dart';
 import 'package:get_storage/get_storage.dart';

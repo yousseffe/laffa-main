@@ -1,4 +1,5 @@
-const MAIN_URL = 'https://laffa-pink.vercel.app';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+final String MAIN_URL = dotenv.env['MAIN_URL'] ?? 'https://laffa-pink.vercel.app';
 
 const FAVORITE_PRODUCT_BOX = 'FAVORITE_PRODUCT_BOX';
 const USER_INFO_BOX = 'USER_INFO_BOX';
