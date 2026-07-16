@@ -1,4 +1,16 @@
 workflows:
+  android-debug:
+    name: Android Debug APK
+    environment:
+      flutter: stable
+    scripts:
+      # Install dependencies
+      - flutter pub get
+      # Build a debug APK (no release signing config needed)
+      - flutter build apk --debug
+    artifacts:
+      - build/app/outputs/flutter-apk/app-debug.apk
+
   ios-release-no-shorebird:
     name: iOS Release (No Shorebird)
     environment:
