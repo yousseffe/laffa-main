@@ -1,12 +1,15 @@
 workflows:
-  android-debug:
-    name: Android Debug APK
+  android-release-bundle:
+    name: Android Release Bundle (AAB)
     environment:
       flutter: stable
     scripts:
       # Install dependencies
       - flutter pub get
-      # Build a debug APK (no release signing config needed)
-      - flutter build apk --debug
+      # The keystore Gradle expects (android/app/my-release-key.jks) is gitignored,
+      # but a copy is committed at the repo root - put it where Gradle looks for it.
+      - cp my-release-key.jks android/app/my-release-key.jks
+      # Build a signed release App Bundle for Play Store upload
+      - flutter build appbundle --release
     artifacts:
-      - build/app/outputs/flutter-apk/app-debug.apk
+      - build/app/outputs/bundle/release/app-release.aab
