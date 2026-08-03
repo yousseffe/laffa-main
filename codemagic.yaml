@@ -6,6 +6,8 @@ workflows:
     scripts:
       # Install dependencies
       - flutter pub get
+      # Regenerate the native app icon from assets/images/laffa_logo.png
+      - dart run flutter_launcher_icons
       # The keystore Gradle expects (android/app/my-release-key.jks) is gitignored,
       # but a copy is committed at the repo root - put it where Gradle looks for it.
       - cp my-release-key.jks android/app/my-release-key.jks

@@ -107,7 +107,11 @@ class CartScreen extends StatelessWidget {
                                         onPressed: () => cartProvider.decreaseQuantity(product),
                                         color: AppColor.darkOrange,
                                       ),
-                                      Text('${cartItem.quantity}', style: const TextStyle(fontSize: 16)),
+                                      _QuantityField(
+                                        key: ValueKey(product.sId),
+                                        quantity: cartItem.quantity,
+                                        onChanged: (qty) => cartProvider.setQuantity(product, qty),
+                                      ),
                                       IconButton(
                                         icon: const Icon(Icons.add_circle_outline),
                                         onPressed: () => cartProvider.increaseQuantity(product),
@@ -173,6 +177,71 @@ class CartScreen extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+// Lets the customer tap in and type an exact quantity instead of only using +/-.
+class _QuantityField extends StatefulWidget {
+  final int quantity;
+  final ValueChanged<int> onChanged;
+
+  const _QuantityField({super.key, required this.quantity, required this.onChanged});
+
+  @override
+  State<_QuantityField> createState() => _QuantityFieldState();
+}
+
+class _QuantityFieldState extends State<_QuantityField> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: '${widget.quantity}');
+  }
+
+  @override
+  void didUpdateWidget(covariant _QuantityField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final currentText = int.tryParse(_controller.text);
+    if (currentText != widget.quantity) {
+      _controller.text = '${widget.quantity}';
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit(String value) {
+    final int? parsed = int.tryParse(value.trim());
+    if (parsed == null) {
+      _controller.text = '${widget.quantity}';
+      return;
+    }
+    widget.onChanged(parsed);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 48,
+      child: TextField(
+        controller: _controller,
+        textAlign: TextAlign.center,
+        keyboardType: TextInputType.number,
+        style: const TextStyle(fontSize: 16),
+        decoration: const InputDecoration(
+          isDense: true,
+          contentPadding: EdgeInsets.symmetric(vertical: 8),
+          border: OutlineInputBorder(),
+        ),
+        onSubmitted: _submit,
+        onTapOutside: (_) => _submit(_controller.text),
       ),
     );
   }

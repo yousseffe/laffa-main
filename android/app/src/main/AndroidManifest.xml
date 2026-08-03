@@ -7,7 +7,7 @@
     <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="false" />
 
     <application
-        android:label="Lafaa"
+        android:label="سوق الكريمية"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

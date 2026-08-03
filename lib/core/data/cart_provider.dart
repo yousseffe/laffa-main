@@ -73,6 +73,18 @@ class CartProvider extends ChangeNotifier {
     }
   }
 
+  // Lets the user type a specific quantity directly instead of tapping +/-.
+  void setQuantity(Product product, int quantity) {
+    int index = _items.indexWhere((item) => item.product.sId == product.sId);
+    if (index < 0) return;
+    if (quantity <= 0) {
+      _items.removeAt(index);
+    } else {
+      _items[index].quantity = quantity;
+    }
+    notifyListeners();
+  }
+
   void clearCart() {
     _items.clear();
     notifyListeners();
