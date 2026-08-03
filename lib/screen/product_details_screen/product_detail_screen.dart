@@ -1,5 +1,6 @@
 import 'package:ecommerce_laffa/l10n/locale_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart'; // Import url_launcher package
 import 'package:provider/provider.dart';
 import 'package:ecommerce_laffa/widget/carousel_slider.dart';
@@ -33,9 +34,9 @@ class ProductDetailScreen extends StatelessWidget {
     String productName = product.nameAr ?? product.nameEn ?? '';
     String productDescription = product.descriptionAr ?? product.descriptionEn ?? '';
 
-    int price = (product.price ?? 0).ceil() + deliveryFee.ceil();
-    int offerPrice = product.offerPrice != null && product.offerPrice! > 0
-        ? product.offerPrice!.ceil() + deliveryFee.ceil()
+    double price = (product.price ?? 0) + deliveryFee;
+    double offerPrice = product.offerPrice != null && product.offerPrice! > 0
+        ? product.offerPrice! + deliveryFee
         : 0;
     const String currencySymbol = "دينار";
 
@@ -104,14 +105,16 @@ class ProductDetailScreen extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            offerPrice > 0 ? "$offerPrice $currencySymbol" : "$price $currencySymbol",
+                            offerPrice > 0
+                                ? "${NumberFormat('#,##0.##').format(offerPrice)} $currencySymbol"
+                                : "${NumberFormat('#,##0.##').format(price)} $currencySymbol",
                             style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.green),
                           ),
                           const SizedBox(width: 5),
                           Visibility(
                             visible: offerPrice > 0 && offerPrice != price,
                             child: Text(
-                              "$price $currencySymbol",
+                              "${NumberFormat('#,##0.##').format(price)} $currencySymbol",
                               style: const TextStyle(
                                 decoration: TextDecoration.lineThrough,
                                 color: Colors.red,

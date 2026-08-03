@@ -25,9 +25,9 @@ class ProductGridTile extends StatelessWidget {
     var localization = AppLocalizations.of(context);
     final double deliveryFee = context.watch<RegionProvider>().deliveryFee;
     String productName = product.nameAr ?? product.nameEn ?? '';
-    int price = (product.price ?? 0).ceil() + deliveryFee.ceil();
-    int offerPrice = product.offerPrice != null && product.offerPrice! > 0
-        ? product.offerPrice!.ceil() + deliveryFee.ceil()
+    double price = (product.price ?? 0) + deliveryFee;
+    double offerPrice = product.offerPrice != null && product.offerPrice! > 0
+        ? product.offerPrice! + deliveryFee
         : 0;
     const String currencySymbol = "دينار";
 
@@ -147,8 +147,8 @@ class ProductGridTile extends StatelessWidget {
                   children: [
                     Text(
                       offerPrice != 0
-                          ? "${NumberFormat('#,###').format(offerPrice)} $currencySymbol"
-                          : "${NumberFormat('#,###').format(price)} $currencySymbol",
+                          ? "${NumberFormat('#,##0.##').format(offerPrice)} $currencySymbol"
+                          : "${NumberFormat('#,##0.##').format(price)} $currencySymbol",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -158,7 +158,7 @@ class ProductGridTile extends StatelessWidget {
                     const SizedBox(width: 8),
                     if (offerPrice != 0 && offerPrice != price)
                       Text(
-                        "${NumberFormat('#,###').format(price)} $currencySymbol",
+                        "${NumberFormat('#,##0.##').format(price)} $currencySymbol",
                         style: const TextStyle(
                           decoration: TextDecoration.lineThrough,
                           fontSize: 14,
