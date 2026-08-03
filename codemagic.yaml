@@ -11,7 +11,9 @@ workflows:
       # The keystore Gradle expects (android/app/my-release-key.jks) is gitignored,
       # but a copy is committed at the repo root - put it where Gradle looks for it.
       - cp my-release-key.jks android/app/my-release-key.jks
-      # Build a signed release App Bundle for Play Store upload
+      # AAB for Play Store upload, APK so it can be installed directly on a phone
       - flutter build appbundle --release
+      - flutter build apk --release
     artifacts:
       - build/app/outputs/bundle/release/app-release.aab
+      - build/app/outputs/flutter-apk/app-release.apk
