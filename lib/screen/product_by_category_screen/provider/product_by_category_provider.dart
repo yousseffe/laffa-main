@@ -13,26 +13,31 @@ class ProductByCategoryProvider extends ChangeNotifier {
 
   ProductByCategoryProvider(this._dataProvider);
 
+  // Sentinel "All" entry - matched by this fixed id, never a real Mongo _id.
+  static const String _allSubCategoryId = '__all__';
+  SubCategory _buildAllSubCategory() => SubCategory(sId: _allSubCategoryId, nameAr: 'الكل', nameEn: 'All');
+
   filterInitialProductAndSubCategory(Category selectedCategory) {
-    mySelectedSubCategory = SubCategory(nameEn: 'All');
+    final allSubCategory = _buildAllSubCategory();
+    mySelectedSubCategory = allSubCategory;
     mySelectedCategory = selectedCategory;
     subCategories =
         _dataProvider.subCategories.where((element) => element.categoryId?.sId == selectedCategory.sId).toList();
-    subCategories.insert(0, SubCategory(nameEn: 'All'));
+    subCategories.insert(0, allSubCategory);
     filteredProduct =
-        _dataProvider.products.where((element) => element.proCategoryId?.nameEn == selectedCategory.nameEn).toList();
+        _dataProvider.products.where((element) => element.proCategoryId?.sId == selectedCategory.sId).toList();
     notifyListeners();
   }
 
   filterProductBySubCategory(SubCategory subCategory) {
     mySelectedSubCategory = subCategory;
-    if (subCategory.nameEn?.toLowerCase() == 'all') {
+    if (subCategory.sId == _allSubCategoryId) {
       filteredProduct =
-          _dataProvider.products.where((element) => element.proCategoryId?.nameEn == mySelectedSubCategory?.nameEn).toList();
+          _dataProvider.products.where((element) => element.proCategoryId?.sId == mySelectedCategory?.sId).toList();
     }
     else{
       filteredProduct =
-          _dataProvider.products.where((element) => element.proSubCategoryId?.nameEn == subCategory.nameEn).toList();
+          _dataProvider.products.where((element) => element.proSubCategoryId?.sId == subCategory.sId).toList();
     }
     notifyListeners();
   }
