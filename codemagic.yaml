@@ -2,7 +2,10 @@ workflows:
   android-release-bundle:
     name: Android Release Bundle (AAB)
     environment:
-      flutter: stable
+      # Pinned instead of "stable": Flutter 3.47.x raised its minimum required
+      # Gradle/AGP/Kotlin versions, which broke this project's build. 3.44.9 is
+      # the last release before that jump and matches what worked before.
+      flutter: 3.44.9
     scripts:
       # Install dependencies
       - flutter pub get
